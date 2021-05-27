@@ -1,4 +1,15 @@
 
+- [Physical internet](#physical-internet)
+- [OSI](#osi)
+- [ISPs structure](#isps-structure)
+- [Physical structure](#physical-structure)
+- [Devices](#devices)
+- [Routing](#routing)
+- [Filtering](#filtering)
+- [Protocols](#protocols)
+  - [TLS](#tls)
+  - [SNMP](#snmp)
+
 # Physical internet
 
 ![internet](./pic1.png)
@@ -45,15 +56,15 @@ Name Server: ns4.google.com
 
 ![TCPIP](pic3.png)
 
-![Layer basics](./pic2.png)
-
 - Physical Layer: Contains all the functions needed to carry the bit stream over a physical medium to another system. topology, LAN, simplex-duplex etc.
 
-- Data Link Layer: Organizes the bit stream into a data unit called a “frame” and delivers the frame to an adjacent system. physical address, crc, MAC, flow control, error control, MAC flooding (adjacent systems delivery)
+![Phy](./pic2.png)
+
+- Data Link Layer: Organizes the bit stream into a data unit called a “frame” and delivers the frame to an adjacent system. physical address, crc, MAC, flow control, error control, MAC flooding, ES-IS, IS-IS (adjacent systems delivery)
 
 ![data link layer](./pic5.png)
 
-- Network Layer: Delivers data in the form of a packet from source to destination, across as many links as necessary, to non-adjacent systems. TCP/IP, ARP, ICMP (ping), TTL (also flooding) (end to end delivery)
+- Network Layer: Delivers data in the form of a packet from source to destination, across as many links as necessary, to non-adjacent systems. TCP/IP, ARP, ICMP (ping), TTL (also flooding) (end to end delivery), IPsec
 
 ![network](./pic6.png)
 
@@ -63,7 +74,7 @@ ifconfig
 ip address
 ```
 
-- Transport Layer: Concerned with process-to-process delivery of information. UDP, TCP, addressing ip+port, connection control, flow control, error control, SYN flood, smurf, UDP flood, TLS, DTLS (kinda), IP spoofing, DTLS reflection/amplification attacks, backpressure, ES-IS, IS-IS, IPsec
+- Transport Layer: Concerned with process-to-process delivery of information. UDP, TCP, addressing ip+port, connection control, flow control, error control, SYN flood, smurf, UDP flood, TLS, DTLS (kinda), IP spoofing, DTLS reflection/amplification attacks, backpressure
 
 - Application (+session, presentation) Layer: Concerned with differences in internal representation, user interfaces, and anything else that the user requires. Named pipe, SOCKS, TLS, SPDY, ASN.1,
 
@@ -146,6 +157,16 @@ DNAT       tcp  --  anywhere             anywhere             tcp dpt:distinct t
 DNAT       tcp  --  anywhere             anywhere             tcp dpt:distinct32 to:172.19.0.3:80
 ```
 
+# Filtering
+
+| Tool | Prev |
+| --- | --- |
+| ip | iptables |
+| ip6 | ip6tables |
+| inet | iptables and ip6tables |
+| arp | arptables |
+| bridge | ebtables  |
+
 # Protocols
 
 ![Encapsulation / Composition of protocols](./pic4.png)
@@ -153,6 +174,15 @@ DNAT       tcp  --  anywhere             anywhere             tcp dpt:distinct32
 ![protocols](./pic7.png)
 
 ![arp](./pic8.png)
+
+```bash
+# kernel MAC tables for DLL
+$ sudo arp -a
+
+? (172.19.0.3) at 02:42:ac:13:00:03 [ether] on br-4f32afc8a10a
+router.asus.com (192.168.0.1) at 2c:4d:54:1b:9e:08 [ether] on wlp4s0
+? (192.168.0.103) at b8:27:eb:d6:10:2d [ether] on wlp4s0
+```
 
 ```bash
 $ sudo arp-scan --interface=wlp4s0 --localnet
